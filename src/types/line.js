@@ -142,8 +142,32 @@ export default class LineAnnotation extends Element {
         y = scaleValue(yScale, options.yMin, y);
         y2 = scaleValue(yScale, options.yMax, y2);
       }
+
+      if (typeof options.offsetScale !== 'undefined' && typeof chart.scales[options.offsetScale]) {
+
+        const targetScale = chart.scales[options.offsetScale];
+        console.log(targetScale);
+
+        x -= this._compensateAxisForBarchart(xScale, targetScale, x);
+        x2 -= this._compensateAxisForBarchart(xScale, targetScale, x2);
+
+        y -= this._compensateAxisForBarchart(yScale, targetScale, y);
+        y2 -= this._compensateAxisForBarchart(yScale, targetScale, y2);
+      }
     }
     return limitLineToArea({x, y}, {x: x2, y: y2}, chart.chartArea);
+  }
+
+  _compensateAxisForBarchart(axisScale, targetScale, axis) {
+    const isAxisHorizontal = (axisScale.position === 'top' || axisScale.position === 'bottom');
+    const axisBoundary = (isAxisHorizontal) ? targetScale.width : targetScale.height;
+
+    const isScaleHorizontal = targetScale.axis === 'x';
+    const isBelowChartWidth = (axis < axisBoundary);
+
+    return ((isScaleHorizontal === isAxisHorizontal) && isBelowChartWidth)
+      ? (axisBoundary / targetScale.ticks.length) / 2
+      : 0;
   }
 }
 
@@ -184,7 +208,8 @@ LineAnnotation.defaults = {
   xMax: undefined,
   yScaleID: 'y',
   yMin: undefined,
-  yMax: undefined
+  yMax: undefined,
+  offsetScale: undefined
 };
 
 LineAnnotation.defaultRoutes = {

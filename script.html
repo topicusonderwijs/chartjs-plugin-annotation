@@ -1,0 +1,106 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>        
+        <script src="./dist/chartjs-plugin-annotation.min.js"></script>
+    </head>
+    <body>
+        <canvas id="horChart" width="500" height="600" style="max-height: 600;"></canvas>
+    <script>
+        const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+
+const data = {
+  labels: labels,
+  datasets: [
+    {
+      label: 'Rood?',
+      data: [10, 30, 50, 20, 25, 44, -10],
+      borderColor: '#F00',
+      yAxisID: 'Freek',
+      xAxisID: 'Berend',
+      backgroundColor: '#F00',
+    },
+    {
+      label: 'Blauw?',
+      data: ['April', 'February', 'June', 'February', 'June'],
+      type: 'bar',
+      borderColor: '#00F',
+      backgroundColor: '#00F',
+      stepped: true,
+      yAxisID: 'Berend',
+      xAxisID: 'Geert',
+    }
+  ]
+};
+const horConfig = {
+  type: 'bar',
+  data: data,
+  options: {
+    responsive: true,
+    plugins: {
+      title: { 
+        display: true,
+        text: 'Stacked scales',
+      },
+              annotation: {
+                annotations: {
+                  line1: {
+                    type: 'line',
+                    yMin: 30,
+                    yMax: 30,
+                    xMin: 0,
+                    xMax: 1,
+                    xScaleID: 'Berend',
+                    yScaleID: 'Freek',
+                    offsetScale: 'Berend',
+                    borderColor: 'rgb(0, 0, 0)',
+                    borderWidth: 2,
+                  },
+                  line2: {
+                    type: 'line',
+                    yMin: 'B',
+                    yMax: 'C',
+                    xMax: 'June',
+                    xMin: 'June',
+                    xScaleID: 'Berend',
+                    yScaleID: 'Geert',
+                    offsetScale: 'Geert',
+                    borderColor: 'rgb(0, 0, 0)',
+                    borderWidth: 2,
+                  }
+                }
+      }
+    },
+    scales: {
+      Berend: {
+                type: 'category',
+                position: 'bottom',
+                labels: labels,
+                offset: true,
+      },
+      Freek: {
+                type: 'linear',
+                position: 'left',
+                stack: 'demo',
+                stackWeight: 5,
+                grid: {
+                  borderColor: '#F00'
+                }
+      },
+      Geert: {
+                type: 'category',
+                labels: ['E', 'D', 'C', 'B', 'A'],
+                position: 'left',
+                stack: 'demo',
+                stackWeight: 2,
+                grid: {
+                  borderColor: '#00F'
+                }
+      }
+    },
+  }
+};
+let ctx = document.getElementById('horChart').getContext('2d');
+let myChart = new Chart(ctx, horConfig);
+        </script>
+    </body>
+</html>
